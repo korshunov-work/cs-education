@@ -1,7 +1,6 @@
 ﻿int[] array = {6,7,9,1,2,5,3};
 int transfer;
 bool check = true;
-
 while (check == true)
 {
     check = false;
@@ -16,7 +15,6 @@ while (check == true)
         }
     }
 }
-
 foreach (int i in array)
 {
     Console.Write(i + " ");
