@@ -1,13 +1,13 @@
 ﻿Console.Clear();
 
-int distance = 10001;
+int distance = 20001;
 int distanceBetween = distance;
 int scale = 200;
 
-while (distance > 10000 || distance < 0)
+while (distance > 20000 || distance < 0)
 {
     Console.Clear();
-    Console.Write("Input distance (meters. <= 10000): ");
+    Console.Write("Input distance (meters. <= 20000): ");
     distance = Convert.ToInt32(Console.ReadLine());
     distanceBetween = distance;
 }
@@ -59,7 +59,7 @@ Console.WriteLine("Distance - " + distanceBetween + " meters");
 
 await Task.Delay(1000);
 
-while (distance > 100)
+while (distance > 10)
 {
     if (friend == 1)
     {
@@ -102,8 +102,6 @@ while (distance > 100)
 
     Console.SetCursorPosition(0, 3);
     Console.WriteLine("Distance - " + distanceBetween + " meters");
-    Console.WriteLine("");
-
 
     await Task.Delay(1000);
 }
