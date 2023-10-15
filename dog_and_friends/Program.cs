@@ -1,33 +1,10 @@
 ﻿Console.Clear();
 
-int distance = 20001;
+Console.Write("Input distance (meters): ");
+int distance = Convert.ToInt32(Console.ReadLine());
 int distanceBetween = distance;
-int scale = 200;
-
-while (distance > 20000 || distance < 0)
-{
-    Console.Clear();
-    Console.Write("Input distance (meters. <= 20000): ");
-    distance = Convert.ToInt32(Console.ReadLine());
-    distanceBetween = distance;
-}
-
-if (distance <= 1000)
-{
-    scale = 10;
-}
-if (distance > 1000 && distance <= 5000)
-{
-    scale = 25;
-}
-if (distance > 5000 && distance <= 10000)
-{
-    scale = 50;
-}
-if (distance > 10000)
-{
-    scale = 100;
-}
+int distanceGraph = distance;
+int step = distanceBetween / 200;
 
 Console.Write("Input speed of first friend (m/sec): ");
 int firstFriendSpeed = Convert.ToInt32(Console.ReadLine());
@@ -38,72 +15,63 @@ int secondFriendSpeed = Convert.ToInt32(Console.ReadLine());
 Console.Write("Input speed of a dog (m/sec): ");
 int dogSpeed = Convert.ToInt32(Console.ReadLine());
 
-int count = 0, friend = 2, time = 0, time2 = 0;
-
-Console.Clear();
-Console.SetCursorPosition(0, 1);
-Console.WriteLine("▓");
-Console.SetCursorPosition(distance / scale, 1);
-Console.WriteLine("▓");
-Console.SetCursorPosition(1, 1);
-Console.WriteLine("@");
-
-for (int i = 0; i < distanceBetween / scale; i++)
-{
-    Console.SetCursorPosition(i, 2);
-    Console.WriteLine("-");
-}
-
-Console.SetCursorPosition(0, 3);
-Console.WriteLine("Distance - " + distanceBetween + " meters");
-
-await Task.Delay(1000);
+int count = 0, friend = 2, time = 0, time2 = 0, firstFriendCoord = 0, secondFriendCoord = 200, dogMeetCoord = 0;
 
 while (distance > 10)
 {
     if (friend == 1)
     {
-        time = distance / (firstFriendSpeed + dogSpeed);
+        time = distanceBetween / (firstFriendSpeed + dogSpeed);
         friend = 2;
     }
     else
     {
-        time = distance / (secondFriendSpeed + dogSpeed);
+        time = distanceBetween / (secondFriendSpeed + dogSpeed);
         friend = 1;
     }
 
-    distance -= (firstFriendSpeed + secondFriendSpeed) * time;
+    distanceBetween -= (firstFriendSpeed + secondFriendSpeed) * time;
     count++;
-    time2 += time;
-
-    Console.Clear();
-    Console.SetCursorPosition(1, 1);
-    if (friend == 2)
+    while (distanceGraph >= step)
     {
-        Console.SetCursorPosition(((0 + time2 * firstFriendSpeed) / scale) + 1, 1);
-        Console.WriteLine("@");
+        firstFriendCoord = (time2 * firstFriendSpeed) / step;
+        secondFriendCoord = 200 - (time2 * secondFriendSpeed) / step;
+        dogMeetCoord = (dogSpeed * (distance / (dogSpeed + secondFriendSpeed))) / step;
+        distanceGraph -= (firstFriendSpeed + secondFriendSpeed) * 60;
+
+        Console.Clear();
+        if (friend == 2)
+        {
+            Console.SetCursorPosition(dogSpeed * time2 / step, 1);
+            Console.WriteLine("@");
+            if (secondFriendCoord >= dogMeetCoord)
+            {
+                friend = 1;
+            }
+            if (friend == 1)
+            {
+                Console.SetCursorPosition(dogSpeed * time2 / step, 1);
+                Console.WriteLine("@");
+            }
+
+            Console.SetCursorPosition(firstFriendCoord, 1);
+            Console.WriteLine("▓");
+
+            Console.SetCursorPosition(secondFriendCoord, 1);
+            Console.WriteLine("▓");
+
+            Console.SetCursorPosition(0, 3);
+            Console.WriteLine($"Distance - {distanceBetween} meters");
+
+            for (int i = 0; i < 200; i++)
+            {
+                Console.SetCursorPosition(i, 2);
+                Console.WriteLine("-");
+            }
+
+            time2 += 60;
+            await Task.Delay(500);
+        }
     }
-    else
-    {
-        Console.SetCursorPosition(((distanceBetween - time2 * secondFriendSpeed) / scale) - 1, 1);
-        Console.WriteLine("@");
-    }
-
-    Console.SetCursorPosition((0 + time2 * firstFriendSpeed) / scale, 1);
-    Console.WriteLine("▓");
-    Console.SetCursorPosition((distanceBetween - time2 * secondFriendSpeed) / scale, 1);
-    Console.WriteLine("▓");
-
-    for (int i = 0; i < distanceBetween / scale; i++)
-    {
-        Console.SetCursorPosition(i, 2);
-        Console.WriteLine("-");
-    }
-
-    Console.SetCursorPosition(0, 3);
-    Console.WriteLine("Distance - " + distanceBetween + " meters");
-
-    await Task.Delay(1000);
 }
-
-Console.WriteLine("The dog ran " + count + " times.");
+Console.Write($"\nThe dog ran {count} times.");
